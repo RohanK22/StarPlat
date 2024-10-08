@@ -1,5 +1,48 @@
 ## Compile Generated Code
 
+#### Aqua | MPI
+To compile the generated code for MPI on Aqua, we require an OpenMPI installation and boost installation, both of which are already available on the system.
+
+Load the linux module named `openmpi411` for OpenMPI version 4.1.1 or `openmpi316` for OpenMPI version 3.1.6. 
+
+```bash
+module load openmpi411
+```
+
+Once the module has been loaded it should be available at `/lfs/sware/openmpi411/bin/mpic++`.
+
+Boost library on Aqua can be found at `/lfs/usrhome/oth/rnintern/scratch/MPI_Comparison/boost/`.
+
+To access the generated code, navigate to:
+`/path/to/StarPlat/graphcode/generated_mpi`. The will be a `.cc` and `.h` file for the algorithm you have generated. You can make a test file (or use the `main.cc` file) that includes the `.cc` file and the necessary headers to run the algorithm on a given graph.
+
+Headers are located one directory tier above where the `.cc` file is executed. As the MPI code generation relies on `boost`, it's necessary to include the respective headers (-I) and link the libraries (-L). Specifically, link against `boost_mpi` and `boost_serialization` since these headers are utilized in the code.
+
+The required `.cc` header files are:
+```
+|-../mpi_header/graph_mpi.cc
+|-../mpi_header/updates.cc
+|-../mpi_header/graph_properties/node_property/node_property.cc 
+|-../mpi_header/graph_properties/edge_property/edge_property.cc 
+|-../mpi_header/rma_datatype/rma_datatype.cc
+```
+
+For demonstration purposes, consider the file `sssp_dslV2.cc`.
+
+This is the compilation command for the `sssp_dslV2` algorithm:
+```bash
+mpicxx -g -std=c++17 \
+-o sssp_dslV2 \
+-I/lfs/usrhome/oth/rnintern/scratch/MPI_Comparison/boost/install_dir/include \
+-L/lfs/usrhome/oth/rnintern/scratch/MPI_Comparison/boost/install_dir/lib \
+main.cc sssp_dslV2.cc \
+../mpi_header/graph_mpi.cc \
+../mpi_header/updates.cc \
+../mpi_header/graph_properties/node_property/node_property.cc \
+../mpi_header/graph_properties/edge_property/edge_property.cc \
+../mpi_header/rma_datatype/rma_datatype.cc
+```
+
 #### MacOS | MPI
 
 To compile the generated code for MPI on MacOS, ensure you satisfy the following prerequisites:

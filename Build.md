@@ -68,3 +68,10 @@ By default, MacOS comes with the `clang` compiler, which can cause syntax errors
    CC = /usr/local/bin/g++
    ```
 6. Add `%token return_func` in the file `lrparser.y` (`StarPlat/src/parser/lrparser.y`)
+
+7. Run make in the `src` directory:
+
+   ```sh
+   cd /path/to/StarPlat/src
+   make
+   ```
